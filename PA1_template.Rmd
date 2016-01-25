@@ -1,5 +1,7 @@
-
 Reproducible Research: Peer Assessment 1
+Steeve Brechmann
+
+2015-02-13
 
 Introduction
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
@@ -32,34 +34,40 @@ Fork/clone the GitHub repository created for this assignment. You will submit th
 NOTE: The GitHub repository also contains the dataset for the assignment so you do not have to download the data separately.
 
 Loading and preprocessing the data
-set the correct working directory
+We assume that the reader set the correct R working directory with the setwd() function.
+
+Load the data (i.e. read.csv())
+# Clear the workspace
+rm(list=ls())
 
 # Load the raw activity data
-activity_data <- read.csv("activity.csv", stringsAsFactors=FALSE)
-
+activity_raw <- read.csv("activity.csv", stringsAsFactors=FALSE)
+Process/transform the data (if necessary) into a format suitable for analysis
 # Transform the date attribute to an actual date format
-activity_data$date <- as.POSIXct(activity_data$date, format="%Y-%m-%d")
+activity_raw$date <- as.POSIXct(activity_raw$date, format="%Y-%m-%d")
 
 # Compute the weekdays from the date attribute
-activity_data <- data.frame(date=activity_data$date, 
-                           weekday=tolower(weekdays(activity_data$date)), 
-                           steps=activity_data$steps, 
-                           interval=activity_data$interval)
+activity_raw <- data.frame(date=activity_raw$date, 
+                           weekday=tolower(weekdays(activity_raw$date)), 
+                           steps=activity_raw$steps, 
+                           interval=activity_raw$interval)
 
 # Compute the day type (weekend or weekday)
-activity_data <- cbind(activity_data, 
-                      daytype=ifelse(activity_data$weekday == "saturday" | 
-                                     activity_data$weekday == "sunday", "weekend", 
+activity_raw <- cbind(activity_raw, 
+                      daytype=ifelse(activity_raw$weekday == "saturday" | 
+                                     activity_raw$weekday == "sunday", "weekend", 
                                      "weekday"))
 
 # Create the final data.frame
-activity <- data.frame(date=activity_data$date, 
-                       weekday=activity_data$weekday, 
-                       daytype=activity_data$daytype, 
-                       interval=activity_data$interval,
-                       steps=activity_data$steps)
+activity <- data.frame(date=activity_raw$date, 
+                       weekday=activity_raw$weekday, 
+                       daytype=activity_raw$daytype, 
+                       interval=activity_raw$interval,
+                       steps=activity_raw$steps)
 
-displaying the few rows activity data
+# Clear the workspace
+rm(activity_raw)
+We display the first few rows of the activity data frame:
 
 head(activity)
 ##         date weekday daytype interval steps
@@ -69,11 +77,10 @@ head(activity)
 ## 4 2012-10-01  monday weekday       15    NA
 ## 5 2012-10-01  monday weekday       20    NA
 ## 6 2012-10-01  monday weekday       25    NA
-
 What is the mean total number of steps taken per day?
 For this part of the assignment, you can ignore the missing values in the dataset.
 
-1. Make a histogram of the total number of steps taken each day
+Make a histogram of the total number of steps taken each day
 # Compute the total number of steps each day (NA values removed)
 sum_data <- aggregate(activity$steps, by=list(activity$date), FUN=sum, na.rm=TRUE)
 
@@ -100,15 +107,17 @@ hist(sum_data$total,
      main="Histogram of the total number of steps taken each day\n(NA removed)")
 
 
-2. Calculate and report the mean and median total number of steps taken per day
+Calculate and report the mean and median total number of steps taken per day
 The mean and median are computed like
 
 mean(sum_data$total)
 median(sum_data$total)
-These formulas give a mean and median of 9354 and 10395 respectively.
+These formulas gives a mean and median of 9354 and 10395 respectively.
 
 What is the average daily activity pattern?
 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+# Clear the workspace
+rm(sum_data)
 
 # Compute the means of steps accross all days for each interval
 mean_data <- aggregate(activity$steps, 
