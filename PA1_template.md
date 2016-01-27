@@ -63,7 +63,7 @@ hist(sum_data$total,
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
 
-#### 2.Calculate and report the mean and median total number of steps taken per day
+####2.Calculate and report the mean and median total number of steps taken per day
 
 
 ```r
@@ -173,7 +173,7 @@ hist(sum_data$total,
 
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
 
-The mean and median are computed like
+The mean and median are computed below
 
 
 ```r
